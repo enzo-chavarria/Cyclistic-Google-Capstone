@@ -49,7 +49,7 @@ FROM `CyclisticData.20*`
 
 The `_TABLE_SUFFIX` column was included to preserve a record of which original table each row came from, making it possible to trace any row back to its source month if needed during later validation or cleaning.
 
-### Validating the Combine
+### Validating the Combination
 Next, the combine was verified by comparing the summed row count of all twelve original tables against the row count of the new combined table.
 
 **Query used:**
