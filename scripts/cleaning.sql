@@ -77,9 +77,13 @@ WHERE ride_length < 0
   AND DATE(started_at) = '2025-11-02'
   AND EXTRACT(HOUR FROM started_at) = 1;
 
---count how many rides exceed 24 hours
+--Count how many rides exceed 24 hours
 SELECT COUNT(*) AS rides_over_24_hours
 FROM `CyclisticData.trips_combined`
+WHERE ride_length > 1440;
+
+--Remove all rows with ride lengths greater than 24 hours
+DELETE FROM `CyclisticData.trips_combined`
 WHERE ride_length > 1440;
 
 
