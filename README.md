@@ -206,3 +206,5 @@ FROM `CyclisticData.trips_combined`;
 ```
 
 **Result:** 
+
+![total null or negative ride lengths](images/null_neg_ride_lengths.png)
