@@ -292,6 +292,6 @@ WHERE start_lat NOT BETWEEN 41.4 AND 42.3
 ```
 
 **Result:** 
-It was successfully verified that noo coordinates in the given data lied outside of the Chicago area
+It was successfully verified that no coordinates in the given data lied outside of the Chicago area
 
 ![no coords out of range](images/coords_check.png)
