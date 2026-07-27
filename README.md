@@ -277,6 +277,4 @@ FROM `CyclisticData.trips_combined`
 WHERE ride_length < 1 AND start_station_id = end_station_id;
 ```
 
-**Result:** [insert count here] of the under-1-minute rides started and ended at the same station.
 
-**Decision:** [insert decision once you've seen both results — e.g., whether these rows were removed, and what proportion of the under-1-minute rides shared a start/end station]
