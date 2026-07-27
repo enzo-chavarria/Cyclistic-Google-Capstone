@@ -75,3 +75,86 @@ Row count of the combined table:
 ![Row count of combined trips table](images/combined_table_rows.png)
 
 The two totals matched, confirming that all rows from the twelve monthly tables were preserved in the combine with no data loss or duplication.
+
+## Cleaning
+
+### Checking for Duplicate Ride IDs
+Since `ride_id` should uniquely identify each ride, the combined table was checked for any ride_id appearing more than once.
+
+```sql
+SELECT ride_id, COUNT(*) AS occurrences
+FROM `CyclisticData.trips_combined`
+GROUP BY ride_id
+HAVING COUNT(*) > 1;
+```
+
+**Result:** 35 ride_ids were found with exactly 2 occurrences each (70 rows total).
+
+### Investigating the Duplicated Rows
+The full rows for each duplicated ride_id were pulled to determine whether they were genuine duplicates or distinct records sharing the same ID.
+
+```sql
+SELECT *
+FROM `CyclisticData.trips_combined`
+WHERE ride_id IN (
+  SELECT ride_id
+  FROM `CyclisticData.trips_combined`
+  GROUP BY ride_id
+  HAVING COUNT(*) > 1
+)
+ORDER BY ride_id;
+```
+
+**Result:** All 35 duplicated ride_ids were exact duplicate rows. Further analysis showed that each affected ride started on April 30, 2026 but ended after midnight on May 1, 2026. This led to the rides being captured in both the April and May monthly export files.
+
+### Removing Duplicates
+Since each ride actually started in April, the row tagged with the April source table was kept, and the corresponding May-tagged duplicate was removed.
+
+```sql
+DELETE FROM `CyclisticData.trips_combined`
+WHERE source_table = '26-05-Trips'
+  AND ride_id IN (
+    SELECT ride_id
+    FROM `CyclisticData.trips_combined`
+    GROUP BY ride_id
+    HAVING COUNT(*) > 1
+  );
+```
+
+**Result:** 35 rows removed, leaving one instance of each affected ride, correctly attributed to its actual start month.
+
+*(Note: the `source_table` column stores values as `YY-MM-Trips` rather than the full four-digit year)*
+
+### Checking for Null Values
+All columns were checked for missing values to identify any data completeness issues.
+
+```sql
+SELECT
+  COUNTIF(ride_id IS NULL) AS null_ride_id,
+  COUNTIF(rideable_type IS NULL) AS null_rideable_type,
+  COUNTIF(started_at IS NULL) AS null_started_at,
+  COUNTIF(ended_at IS NULL) AS null_ended_at,
+  COUNTIF(start_station_name IS NULL) AS null_start_station_name,
+  COUNTIF(start_station_id IS NULL) AS null_start_station_id,
+  COUNTIF(end_station_name IS NULL) AS null_end_station_name,
+  COUNTIF(end_station_id IS NULL) AS null_end_station_id,
+  COUNTIF(start_lat IS NULL) AS null_start_lat,
+  COUNTIF(start_lng IS NULL) AS null_start_lng,
+  COUNTIF(end_lat IS NULL) AS null_end_lat,
+  COUNTIF(end_lng IS NULL) AS null_end_lng,
+  COUNTIF(member_casual IS NULL) AS null_member_casual,
+  COUNTIF(source_table IS NULL) AS null_source_table
+FROM `CyclisticData.trips_combined`;
+```
+
+**Result:** Nulls were found only in the following columns:
+
+| Column | Null Count |
+|---|---|
+| `start_station_name` | 1,257,507 |
+| `start_station_id` | 1,257,507 |
+| `end_station_name` | 1,321,666 |
+| `end_station_id` | 1,321,666 |
+| `end_lat` | 5,600 |
+| `end_lng` | 5,600 |
+
