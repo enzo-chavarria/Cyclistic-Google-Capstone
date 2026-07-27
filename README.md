@@ -194,7 +194,7 @@ FROM `CyclisticData.trips_combined`;
 
 
 
-### Checking for null or negative ride lengths
+### Checking for Null or Negative Ride Lengths
 
 ```sql
 CREATE OR REPLACE TABLE `CyclisticData.trips_combined` AS
@@ -210,7 +210,7 @@ FROM `CyclisticData.trips_combined`;
 ![total null or negative ride lengths](images/null_neg_ride_lengths.png)
 
 
-### Investigating negative ride lengths
+### Investigating Negative Ride Lengths
 
 ```sql
 SELECT ride_id, started_at, ended_at, ride_length, rideable_type, member_casual
@@ -231,7 +231,7 @@ WHERE ride_length < 0
   AND EXTRACT(HOUR FROM started_at) = 1;
 ```
 
-### Investigating ride lengths exceeding 24 hours
+### Investigating Ride Lengths Exceeding 24 Hours
 
 Divvy/Lyft's own published methodology typically treats rides over 24 hours (1,440 minutes) as bikes that weren't properly docked, rather than genuine rides. Therefore, the number of rides exceeding this ride length time were pulled.
 
@@ -255,3 +255,28 @@ WHERE ride_length > 1440;
 
 **Result:** 5532 rows removed.
 
+
+### Checking for Unusually Short Rides
+The opposite extreme from the 24-hour+ rides was also checked. Very short rides can indicate a false start rather than a genuine ride.
+
+```sql
+SELECT COUNT(*) AS very_short_rides
+FROM `CyclisticData.trips_combined`
+WHERE ride_length < 1;
+```
+
+**Result:** 
+
+![162217 rides under 1 minute](images/rides_under_min.png)
+
+To help confirm whether these represent false starts rather than genuine (if brief) rides, short rides were also checked against whether the start and end station matched — a strong indicator the bike was immediately redocked at the same location it was checked out from.
+
+```sql
+SELECT COUNT(*) AS short_and_same_station
+FROM `CyclisticData.trips_combined`
+WHERE ride_length < 1 AND start_station_id = end_station_id;
+```
+
+**Result:** [insert count here] of the under-1-minute rides started and ended at the same station.
+
+**Decision:** [insert decision once you've seen both results — e.g., whether these rows were removed, and what proportion of the under-1-minute rides shared a start/end station]
