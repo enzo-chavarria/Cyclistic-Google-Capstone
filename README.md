@@ -176,4 +176,33 @@ GROUP BY rideable_type;
 
 All 1,257,507 rows with a null `start_station_name`/`start_station_id` were associated with `electric_bike` rides. Since electric bikes don't require a station to be locked up, it follows that having these values null is an expected pattern. As such, these values should be left in place and not removed.
 
+### Adding `ride_length` and `day_of_week` Columns
+In order to further investigate the null values, it is necessary to add columns that calculate ride length and what day of the week the ride started. With this information, it will be possible to cross reference extremely long wait times with null `end_lat`/`end_lng` values to find rides that may not have ended. 
 
+```sql
+CREATE OR REPLACE TABLE `CyclisticData.trips_combined` AS
+SELECT
+  *,
+  TIMESTAMP_DIFF(ended_at, started_at, MINUTE) AS ride_length,
+  EXTRACT(DAYOFWEEK FROM started_at) AS day_of_week
+FROM `CyclisticData.trips_combined`;
+```
+
+**`ride_length`:** Calculated using `TIMESTAMP_DIFF`, which returns the difference between `ended_at` and `started_at` in minutes. 
+
+**`day_of_week`:** Calculated using `EXTRACT(DAYOFWEEK FROM started_at)`, which returns the values `1` for Sunday through `7` for Saturday
+
+
+
+### Checking for null or negative ride lengths
+
+```sql
+CREATE OR REPLACE TABLE `CyclisticData.trips_combined` AS
+SELECT
+  *,
+  TIMESTAMP_DIFF(ended_at, started_at, MINUTE) AS ride_length,
+  EXTRACT(DAYOFWEEK FROM started_at) AS day_of_week
+FROM `CyclisticData.trips_combined`;
+```
+
+**Result:** 
