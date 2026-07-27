@@ -159,8 +159,8 @@ FROM `CyclisticData.trips_combined`;
 | `end_lat` | 5,600 |
 | `end_lng` | 5,600 |
 
-### Investigating Null Values
-Since Cyclistic offers a range of rideable bike types, the millions of null station names and id's could be attributed to e-bikes, as they don't require a station to be stored before or after a ride. The distribution of these null values was checked between electric and classic bikes. 
+### Investigating Null Station Name/ID Values
+To determine whether the missing `start_station_name`/`start_station_id` values represented a data quality issue or an expected pattern, the null rows were cross-referenced against `rideable_type`. 
 
 ```sql
 SELECT
@@ -173,3 +173,7 @@ GROUP BY rideable_type;
 **Result:** 
 
 ![nulls by ridetype](images/nulls_by_ridetype.png)
+
+All 1,257,507 rows with a null `start_station_name`/`start_station_id` were associated with `electric_bike` rides. Since electric bikes don't require a station to be locked up, it follows that having these values null is an expected pattern. As such, these values should be left in place and not removed.
+
+
