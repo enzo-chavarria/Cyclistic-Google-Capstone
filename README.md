@@ -267,7 +267,7 @@ WHERE ride_length < 1;
 
 **Result:** 
 
-![162217 rides under 1 minute](images/rides_under_min.png)
+![162,217 rides under 1 minute](images/rides_under_minute.png)
 
 To help confirm whether these represent false starts rather than genuine (if brief) rides, short rides were also checked against whether the start and end station matched — a strong indicator the bike was immediately redocked at the same location it was checked out from.
 
