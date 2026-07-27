@@ -282,7 +282,7 @@ WHERE ride_length < 1;
 
 ### Verify Ride Data Coordinates
 
-Since Cyclistic operates within Chicago, the coordinates in the provided data were checked to make sure none lie outside of the Chicago area.
+Since Cyclistic operates within Chicago, the coordinates in the provided data were checked against Chicagos limits bounding box to make sure none lie outside of the designated area.
 
 ```sql
 SELECT COUNT(*) AS out_of_range
@@ -290,3 +290,8 @@ FROM `CyclisticData.trips_combined`
 WHERE start_lat NOT BETWEEN 41.4 AND 42.3
    OR start_lng NOT BETWEEN -88.5 AND -87.3;
 ```
+
+**Result:** 
+It was successfully verified that noo coordinates in the given data lied outside of the Chicago area
+
+![no coords out of range](images/coords_check.png)
