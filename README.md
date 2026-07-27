@@ -270,6 +270,7 @@ WHERE ride_length < 1;
 ![162,217 rides under 1 minute](images/rides_under_minute.png)
 
 ### Remove Rides Under a Minute Long
+In order to remove data representing false starts or rides that are otherwise not genuine, rows that contained ride lengths less than one minute were removed.
 
 ```sql
 DELETE FROM `CyclisticData.trips_combined`
