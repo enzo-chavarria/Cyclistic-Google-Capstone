@@ -244,3 +244,14 @@ WHERE ride_length > 1440;
 **Results:** 
 
 ![number of rides exceeding 24 hours](images/24hr_ride_length.png)
+
+
+### Removing Rides Over 24 Hours
+
+```sql
+DELETE FROM `CyclisticData.trips_combined`
+WHERE ride_length > 1440;
+```
+
+**Result:** 5532 rows removed.
+
