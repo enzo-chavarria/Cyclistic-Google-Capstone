@@ -177,7 +177,7 @@ GROUP BY rideable_type;
 All 1,257,507 rows with a null `start_station_name`/`start_station_id` were associated with `electric_bike` rides. Since electric bikes don't require a station to be locked up, it follows that having these values null is an expected pattern. As such, these values should be left in place and not removed.
 
 ### Adding `ride_length` and `day_of_week` Columns
-In order to further investigate the null values, it is necessary to add columns that calculate ride length and what day of the week the ride started. With this information, it will be possible to cross reference extremely long wait times with null `end_lat`/`end_lng` values to find rides that may not have ended. 
+In order to further investigate the null values, it was necessary to add columns that calculate ride length and what day of the week the ride started. With this information, it is possible to cross reference extremely long wait times with null `end_lat`/`end_lng` values to find rides that may not have ended. 
 
 ```sql
 CREATE OR REPLACE TABLE `CyclisticData.trips_combined` AS
@@ -230,3 +230,16 @@ WHERE ride_length < 0
   AND DATE(started_at) = '2025-11-02'
   AND EXTRACT(HOUR FROM started_at) = 1;
 ```
+
+### Investigating ride lengths exceeding 24 hours
+
+Divvy/Lyft's own published methodology typically treats rides over 24 hours (1,440 minutes) as bikes that weren't properly docked, rather than genuine rides. Therefore, the number of rides exceeding this ride length time were pulled.
+
+```sql
+SELECT COUNT(*) AS rides_over_24_hours
+FROM `CyclisticData.trips_combined`
+WHERE ride_length > 1440;
+```
+
+**Results:** 
+
