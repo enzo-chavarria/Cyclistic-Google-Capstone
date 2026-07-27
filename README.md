@@ -243,3 +243,4 @@ WHERE ride_length > 1440;
 
 **Results:** 
 
+![number of rides exceeding 24 hours](images/24hr_ride_length.png)
