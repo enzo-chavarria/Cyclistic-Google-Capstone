@@ -208,3 +208,25 @@ FROM `CyclisticData.trips_combined`;
 **Result:** 
 
 ![total null or negative ride lengths](images/null_neg_ride_lengths.png)
+
+
+### Investigating negative ride lengths
+
+```sql
+SELECT ride_id, started_at, ended_at, ride_length, rideable_type, member_casual
+FROM `CyclisticData.trips_combined`
+WHERE ride_length < 0
+ORDER BY ride_length;
+```
+
+**Result:** All 29 rows with negative ride lengths occurred on 11/02/2025 between 1 and 2 am. This means that the negative ride lengths are attributed to the clock change for daylight savings.
+
+Rather than deleting these rows, `ride_length` was corrected by adding 60 minutes to each affected ride to recover its true elapsed duration, since these represent legitimate rides with a fully explainable and recoverable duration rather than genuine data errors.
+
+```sql
+UPDATE `CyclisticData.trips_combined`
+SET ride_length = ride_length + 60
+WHERE ride_length < 0
+  AND DATE(started_at) = '2025-11-02'
+  AND EXTRACT(HOUR FROM started_at) = 1;
+```
