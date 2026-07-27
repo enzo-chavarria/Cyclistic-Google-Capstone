@@ -279,3 +279,14 @@ WHERE ride_length < 1;
 
 **Result:** 162,217 rows removed.
 
+
+### Verify Ride Data Coordinates
+
+Since Cyclistic operates within Chicago, the coordinates in the provided data were checked to make sure none lie outside of the Chicago area.
+
+```sql
+SELECT COUNT(*) AS out_of_range
+FROM `CyclisticData.trips_combined`
+WHERE start_lat NOT BETWEEN 41.4 AND 42.3
+   OR start_lng NOT BETWEEN -88.5 AND -87.3;
+```
