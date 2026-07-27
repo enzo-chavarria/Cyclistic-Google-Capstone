@@ -77,7 +77,7 @@ Row count of the combined table:
 The two totals matched, confirming that all rows from the twelve monthly tables were preserved in the combine with no data loss or duplication.
 
 ## Cleaning
-[View full script: `scripts/cleaning.sql`](scripts/cleaning.sql)
+[View full script for cleaning](scripts/cleaning.sql)
 
 ### Checking for Duplicate Ride IDs
 Since `ride_id` should uniquely identify each ride, the combined table was checked for any ride_id appearing more than once.
@@ -269,7 +269,7 @@ WHERE ride_length < 1;
 
 ![162,217 rides under 1 minute](images/rides_under_minute.png)
 
-### Remove Rides Under a Minute Long
+### Removing Rides Under a Minute Long
 In order to remove data representing false starts or rides that are otherwise not genuine, rows that contained ride lengths less than one minute were removed.
 
 ```sql
@@ -280,7 +280,7 @@ WHERE ride_length < 1;
 **Result:** 162,217 rows removed.
 
 
-### Verify Ride Data Coordinates
+### Verifying Ride Data Coordinates
 
 Since Cyclistic operates within Chicago, the coordinates in the provided data were checked against Chicagos limits bounding box to make sure none lie outside of the designated area.
 
@@ -295,3 +295,26 @@ WHERE start_lat NOT BETWEEN 41.4 AND 42.3
 It was successfully verified that no coordinates in the given data lied outside of the Chicago area
 
 ![no coords out of range](images/coords_check.png)
+
+
+## Analysis
+
+[View full script for analysis](scripts/analysis.sql)
+
+### Comparing Ride Length Metrics of Casual Riders and Members
+
+```sql
+SELECT
+  member_casual,
+  ROUND(AVG(ride_length), 2) AS avg_ride_length_minutes,
+  APPROX_QUANTILES(ride_length, 100)[OFFSET(50)] AS median_ride_length_minutes,
+  MAX(ride_length) AS max_ride_length_minutes,
+  COUNT(*) AS num_rides
+FROM `CyclisticData.trips_combined`
+GROUP BY member_casual;
+```
+
+**Result:** 
+
+
+
