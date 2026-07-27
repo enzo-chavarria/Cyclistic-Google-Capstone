@@ -171,3 +171,4 @@ FROM `CyclisticData.trips_combined`
 GROUP BY rideable_type;
 ```
 **Result:** 
+![nulls by ridetype](images/nulls_by_ridetype.png)
