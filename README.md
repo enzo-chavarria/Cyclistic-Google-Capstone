@@ -269,12 +269,12 @@ WHERE ride_length < 1;
 
 ![162,217 rides under 1 minute](images/rides_under_minute.png)
 
-To help confirm whether these represent false starts rather than genuine (if brief) rides, short rides were also checked against whether the start and end station matched — a strong indicator the bike was immediately redocked at the same location it was checked out from.
+### Remove Rides Under a Minute Long
 
 ```sql
-SELECT COUNT(*) AS short_and_same_station
-FROM `CyclisticData.trips_combined`
-WHERE ride_length < 1 AND start_station_id = end_station_id;
+DELETE FROM `CyclisticData.trips_combined`
+WHERE ride_length < 1;
 ```
 
+**Result:** 162,217 rows removed.
 
