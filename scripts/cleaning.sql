@@ -95,5 +95,11 @@ WHERE ride_length < 1;
 DELETE FROM `CyclisticData.trips_combined`
 WHERE ride_length < 1;
 
+--Check if any coords lie outside Chicago
+SELECT COUNT(*) AS out_of_range
+FROM `CyclisticData.trips_combined`
+WHERE start_lat NOT BETWEEN 41.4 AND 42.3
+   OR start_lng NOT BETWEEN -88.5 AND -87.3;
+
   
 
