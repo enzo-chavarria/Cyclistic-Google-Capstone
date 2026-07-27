@@ -347,3 +347,8 @@ ORDER BY member_casual, day_of_week;
 
 **Result:** 
 
+![day of week casual](images/dayofweek_casual.png)
+
+![day of week member](images/dayofweek_mem.png)
+
+In fact, annual members showed a consistent spike in the number of rides Mon - Fri while casual riders had a spike Fri - Sun. This corroborates the earlier assumption that annual members typically use the Cyclistic service as a way to commute, while casual riders are more prone to use it for leisure on the weekends.
