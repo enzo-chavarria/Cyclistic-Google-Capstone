@@ -86,7 +86,14 @@ WHERE ride_length > 1440;
 DELETE FROM `CyclisticData.trips_combined`
 WHERE ride_length > 1440;
 
+--Count how many rides have lengths less than one minute
+SELECT COUNT(*) AS very_short_rides
+FROM `CyclisticData.trips_combined`
+WHERE ride_length < 1;
 
+--Delete rows that have ride lengths less than one minute
+DELETE FROM `CyclisticData.trips_combined`
+WHERE ride_length < 1;
 
   
 
