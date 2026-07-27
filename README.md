@@ -77,6 +77,7 @@ Row count of the combined table:
 The two totals matched, confirming that all rows from the twelve monthly tables were preserved in the combine with no data loss or duplication.
 
 ## Cleaning
+[View full script: `scripts/cleaning.sql`](scripts/cleaning.sql)
 
 ### Checking for Duplicate Ride IDs
 Since `ride_id` should uniquely identify each ride, the combined table was checked for any ride_id appearing more than once.
