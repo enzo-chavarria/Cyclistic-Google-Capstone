@@ -159,3 +159,15 @@ FROM `CyclisticData.trips_combined`;
 | `end_lat` | 5,600 |
 | `end_lng` | 5,600 |
 
+### Investigating Null Values
+Since Cyclistic offers a range of rideable bike types, the millions of null station names and id's could be attributed to e-bikes, as they don't require a station to be stored before or after a ride. The distribution of these null values was checked between electric and classic bikes. 
+
+```sql
+SELECT
+  rideable_type,
+  COUNTIF(start_station_name IS NULL) AS null_start_station,
+  COUNT(*) AS total_rides
+FROM `CyclisticData.trips_combined`
+GROUP BY rideable_type;
+```
+**Result:** 
